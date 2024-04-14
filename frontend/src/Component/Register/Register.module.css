@@ -1,0 +1,13 @@
+.link {
+  display: block;
+  width: 100%;
+  padding: var(--mantine-spacing-md);
+  color: var(--mantine-color-black);
+  cursor: pointer;
+  font-weight: bolder;
+  transition: color 0.1s ease-in;
+  
+  @mixin hover {
+    color: var(--mantine-color-red-5);
+  }
+}
