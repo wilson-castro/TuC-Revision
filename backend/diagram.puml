@@ -1,0 +1,259 @@
+@startuml
+class UserController {
+- UserRepo repository
+~ PasswordEncoder encoder
+~ ReponseBuilder er
++ ResponseEntity<?> getById(Long)
++ Page<UserResponseDTO> getAll(int,int)
++ ResponseEntity<?> create(UserRequestDTO)
++ ResponseEntity<?> delete(Long)
++ ResponseEntity<?> update(Long,UserRequestDTO)
++ ResponseEntity<?> handleAccessException(Exception,WebRequest)
+}
+class TokenService {
+- Long tokenExpiration
+- String secret
++ String generateToken(User)
++ String verify(String)
++ Instant getExpirationDateFromToken()
+}
+class EnumValidatorImpl {
+- List<String> acceptedvalues
++ void initialize(EnumValidator)
++ boolean isValid(String,ConstraintValidatorContext)
+}
+class InterestRequestDTO {
+- Long id
+- Date dataInteresse
+- Long carId
+- String nome
+- String telefone
+- Boolean ativo
++ Interest toEntity()
+}
+class LoginRequestDTO {
+- String login
+- String senha
+}
+class Encoder {
++ {static} PasswordEncoder getEncoder()
+}
+class CarRequestDTO {
+- Long id
+- String marca
+- String descricao
+- String modelo
+- Date anoModelo
+- Date anoFabricacao
+- double valor
+- String image
++ Car toEntity()
+}
+class Car {
+- Long id
+- String marca
+- String descricao
+- String modelo
+- Date anoModelo
+- Date anoFabricacao
+- double valor
+- String image
++ CarResponseDTO toDTO()
+}
+class ProjetoPiApplication {
++ {static} void main(String[])
+}
+interface InterestRepo {
+~ Optional<Interest> findById(long)
+~ Optional<Interest> findByNome(String)
+~ Optional<Interest> findByNomeIgnoreCase(String)
+~ Optional<Interest> findByCarro(Car)
+~ Interest save(Interest)
+~ Iterable<Interest> findAll()
+~ Page<Interest> findAllByNome(String,Pageable)
+~ void deleteById(Long)
+~ Optional<Interest> findByCarId(Long)
+}
+class CarResponseDTO {
+~ Long id
+~ String marca
+~ String modelo
+~ Date anoFabricacao
+~ Date anoModelo
+~ Double valor
+~ String descricao
+~ String image
+}
+class User {
+- Long id
+- String login
+- String senha
+- String nome
+- Boolean ativo
+- Date dataNascimento
+- Date dataCadastro
+- String role
++ UserResponseDTO toDTO()
++ Collection<? extends GrantedAuthority> getAuthorities()
++ String getPassword()
++ String getUsername()
++ boolean isAccountNonExpired()
++ boolean isAccountNonLocked()
++ boolean isCredentialsNonExpired()
++ boolean isEnabled()
+}
+enum Role {
++  ADMIN
++  USER
+}
+interface CarRepo {
+~ Optional<Car> findById(long)
+~ Optional<Car> findByIdActive(long)
+~ Page<Car> findAllActive(Pageable)
+~ Car save(Car)
+~ void deleteById(Long)
+}
+class GlobalErrorHandle {
+# ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException,HttpHeaders,HttpStatusCode,WebRequest)
+}
+class InterestController {
+- InterestRepo repository
+~ CarRepo carRepo
+~ PasswordEncoder encoder
+~ ReponseBuilder er
++ ResponseEntity<?> getById(Long)
++ Page<Interest> getAll(int,int,String)
++ ResponseEntity<?> create(InterestRequestDTO)
++ ResponseEntity<?> delete(Long)
++ ResponseEntity<?> update(Long,InterestRequestDTO)
++ ResponseEntity<?> handleAccessException(Exception,WebRequest)
+}
+class MiddlewareToken {
+~ TokenService tokenService
+~ UserRepo userRepo
+# void doFilterInternal(HttpServletRequest,HttpServletResponse,FilterChain)
+}
+class AccessEntryPoint {
++ void commence(HttpServletRequest,HttpServletResponse,AuthenticationException)
+}
+class CarController {
+- CarRepo repository
+~ ReponseBuilder er
++ ResponseEntity<?> getById(Long)
++ Page<CarResponseDTO> getAll(int,int,Boolean)
++ ResponseEntity<?> create(CarRequestDTO)
++ ResponseEntity<?> delete(Long)
++ ResponseEntity<?> update(Long,CarRequestDTO)
++ ResponseEntity<?> handleAccessException(Exception,WebRequest)
+}
+class Authentication {
+~ UserRepo repository
++ UserDetails loadUserByUsername(String)
+}
+class StartupInitalData {
+~ UserRepo userRepository
+~ PasswordEncoder encoder
+- String adminUsername
+- String adminPassword
++ void run(String)
+}
+class ErrorController {
+~ ReponseBuilder rb
++ ResponseEntity<?> handleNullPointerExceptions(Exception)
++ ResponseEntity<?> handleExceptions(TokenExpiredException)
++ ResponseEntity<?> handleExceptions(Exception)
++ ResponseEntity<?> handleExceptions(MethodArgumentNotValidException)
++ ResponseEntity<?> handleExceptions(AuthenticationException)
++ ResponseEntity<?> handleExceptions(ServletException)
+}
+interface UserRepo {
+~ Optional<User> findById(long)
+~ User save(User)
+~ void deleteById(Long)
+~ Optional<User> findByLoginIgnoreCase(String)
+}
+class LoginResponseDTO {
+- String token
+- Long exp
+- String role
+- Long userId
+- String user
+- String name
+- String login
+}
+class ReponseBuilder {
++ ResponseEntity<Map<String,Object>> error(String,HttpStatus)
++ ResponseEntity<Map<String,Object>> error(String)
++ ResponseEntity<Map<String,Object>> success(Object)
+}
+class Interest {
+- Long id
+- Date dataInteresse
+- Car carro
+- String nome
+- String telefone
+- boolean ativo
+}
+class AuthController {
+- {static} String ERROR_LOGIN
+- {static} Logger logger
+~ ReponseBuilder res
+- AuthenticationManager authenticationManager
+- UserRepo userRepo
+- TokenService tokenService
++ ResponseEntity<?> login(LoginRequestDTO)
++ ResponseEntity<?> refreshToken(RefreshTokenRequestDTO)
++ ResponseEntity<?> handleException(Exception,WebRequest)
++ ResponseEntity<?> handleExceptions(AuthenticationException)
+}
+class UserResponseDTO {
+- Long id
+- String login
+- String senha
+- String nome
+- Boolean ativo
+- Date dataNascimento
+- Date dataCadastro
+- String role
+}
+class RefreshTokenRequestDTO {
+- String token
+}
+class UserRequestDTO {
+- Long id
+- String login
+- String senha
+- String nome
+- Boolean ativo
+- Date dataNascimento
+- Date dataCadastro
+- String role
++ User toEntity()
+}
+class ReplaceObjectAttributes {
+- PasswordEncoder passwordEncoder
+~ T existingItem
++ T replaceWith(T)
+- boolean isPk(Field)
+- boolean isEncode(Field)
+}
+class Configs {
+- MiddlewareToken filter
+~ PageableHandlerMethodArgumentResolverCustomizer pageableResolverCustomizer()
++ SecurityFilterChain filterChain(HttpSecurity)
++ AuthenticationManager authenticationManager(AuthenticationConfiguration)
++ PasswordEncoder passwordEncoder()
+}
+
+
+ConstraintValidator <|.. EnumValidatorImpl
+PagingAndSortingRepository <|-- InterestRepo
+UserDetails <|.. User
+PagingAndSortingRepository <|-- CarRepo
+ResponseEntityExceptionHandler <|-- GlobalErrorHandle
+OncePerRequestFilter <|-- MiddlewareToken
+AuthenticationEntryPoint <|.. AccessEntryPoint
+UserDetailsService <|.. Authentication
+CommandLineRunner <|.. StartupInitalData
+PagingAndSortingRepository <|-- UserRepo
+@enduml
