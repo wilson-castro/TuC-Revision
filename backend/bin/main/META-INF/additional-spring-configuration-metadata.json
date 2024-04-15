@@ -1,0 +1,34 @@
+{
+  "properties": [
+    {
+      "name": "admin.username",
+      "type": "java.lang.String",
+      "description": "Login para o admin"
+    },
+    {
+      "name": "admin.password",
+      "type": "java.lang.String",
+      "description": "Senha do admin"
+    },
+    {
+      "name": "jwt.token.secret",
+      "type": "java.lang.String",
+      "description": "Segredo a ser usado na geração do token/hash"
+    },
+    {
+      "name": "jwt.token.exp",
+      "type": "java.lang.Long",
+      "description": "Tempo de duração do token em segundos"
+    },
+    {
+      "name": "jwt.token.refreshExp",
+      "type": "java.lang.String",
+      "description": "Tempo de duração do refresh token em segundos"
+    },
+    {
+      "name": "jwt.token.refreshSecret",
+      "type": "java.lang.String",
+      "description": "Segredo a ser usado na geração do token/hash de refresh"
+    }
+  ]
+}
