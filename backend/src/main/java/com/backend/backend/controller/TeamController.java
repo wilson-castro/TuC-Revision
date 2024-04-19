@@ -26,10 +26,15 @@ import com.backend.backend.models.team.Team;
 import com.backend.backend.models.team.TeamRepo;
 import com.backend.backend.models.team.TeamRequestDTO;
 import com.backend.backend.models.team.TeamResponseDTO;
+import com.backend.backend.models.team.member.Member;
+import com.backend.backend.models.team.member.MemberRepo;
+import com.backend.backend.models.team.member.MemberRequestDTO;
+import com.backend.backend.models.team.member.MemberResponseDTO;
+import com.backend.backend.models.users.User;
+import com.backend.backend.models.users.UserRepo;
 import com.backend.backend.utils.ReplaceObjectAttributes;
 import com.backend.backend.utils.ReponseBuilder;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 
 @RestController
@@ -39,6 +44,11 @@ public class TeamController {
 
     @Autowired
     private TeamRepo repository;
+    @Autowired
+    private MemberRepo memberRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
     @Autowired
     PasswordEncoder encoder;
@@ -69,7 +79,6 @@ public class TeamController {
     }
 
     @PostMapping
-    @RolesAllowed("ADMIN")
     public ResponseEntity<?> create(@RequestBody @Valid TeamRequestDTO item) {
         try {
             Team itemToBeSaved = item.toEntity();
@@ -82,7 +91,6 @@ public class TeamController {
     }
 
     @DeleteMapping("{id}")
-    @RolesAllowed("ADMIN")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         Optional<Team> existingItemOptional = repository.findById(id);
 
@@ -101,7 +109,6 @@ public class TeamController {
         if (existingItemOptional.isPresent()) {
             Team existingItem = existingItemOptional.get();
 
-
             ReplaceObjectAttributes<Team> rep = new ReplaceObjectAttributes<>(existingItem);
             rep.replaceWith(item.toEntity());
 
@@ -110,6 +117,71 @@ public class TeamController {
             return new ResponseEntity<>(savedItem, HttpStatus.OK);
         } else {
             return er.error("Usuario não encontrado", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/{teamId}/members/{id}")
+    public ResponseEntity<?> getMemberById(@PathVariable Long teamId, @PathVariable Long id) {
+        Optional<Member> existingItemOptional = memberRepo.getTeamMember(teamId, id);
+
+        if (existingItemOptional.isPresent()) {
+            Member existingItem = existingItemOptional.get();
+
+            return new ResponseEntity<MemberResponseDTO>(existingItem.toDTO(), HttpStatus.OK);
+        } else {
+
+            return er.error("Membro não encontrado", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/{teamId}/members")
+    public Page<MemberResponseDTO> getMembersOf(@PathVariable Long teamId, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        PageRequest of = PageRequest.of(page, size);
+
+        Page<MemberResponseDTO> findAll = memberRepo.getAllMembers(of, teamId).map((member) -> member.toDTO());
+        return findAll;
+    }
+
+    @PostMapping("/{teamId}/members")
+    public ResponseEntity<?> createMember(@PathVariable Long teamId, @RequestBody @Valid MemberRequestDTO item) {
+        try {
+            Member itemToBeSaved = item.toEntity();
+            Long userId = item.getUserId();
+            Optional<Team> team = repository.findById(teamId);
+            Optional<User> user = userRepo.findById(userId);
+            if (team.isEmpty()) {
+                return er.error("O time informado não existe", HttpStatus.NOT_FOUND);
+            }
+            if (user.isEmpty()) {
+                return er.error("O usuário informado não existe", HttpStatus.NOT_FOUND);
+            }
+            Optional<Member> teamMember = memberRepo.getTeamMember(teamId, userId);
+
+            if (teamMember.isPresent()) {
+                return er.error("O usuário informado já faz parte do time", HttpStatus.BAD_REQUEST);
+            }
+
+            itemToBeSaved.setTeam(team.get());
+            itemToBeSaved.setUser(user.get());
+            Member savedItem = memberRepo.save(itemToBeSaved);
+            return new ResponseEntity<>(savedItem.toDTO(), HttpStatus.CREATED);
+        } catch (Exception e) {
+
+            return er.error("Erro ao criar membro:" + e.getMessage(), HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    @DeleteMapping("/{teamId}/members/{id}")
+    public ResponseEntity<?> deleteMember(@PathVariable Long teamId, @PathVariable Long id) {
+        Optional<Member> existingItemOptional = memberRepo.getTeamMember(teamId, id);
+
+        if (existingItemOptional.isPresent()) {
+            Long idLong = existingItemOptional.get().getId();
+            memberRepo.deleteById(idLong);
+            return new ResponseEntity<>(idLong, HttpStatus.OK);
+        } else {
+            return er.error("Membro não encontrado", HttpStatus.NOT_FOUND);
         }
     }
 

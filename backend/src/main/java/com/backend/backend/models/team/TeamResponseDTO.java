@@ -2,7 +2,6 @@ package com.backend.backend.models.team;
 
 import java.util.Date;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -21,7 +20,7 @@ public class TeamResponseDTO {
 
     public TeamResponseDTO(Team team) {
         this(team.getId(), team.getNome(), team.getAtivo(),
-        team.getDataCadastro());
+                team.getDataCadastro());
     }
 
 }
