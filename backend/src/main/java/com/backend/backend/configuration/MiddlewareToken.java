@@ -11,8 +11,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.backend.backend.modals.users.User;
-import com.backend.backend.modals.users.UserRepo;
+import com.backend.backend.models.users.User;
+import com.backend.backend.models.users.UserRepo;
 import com.backend.backend.services.TokenService;
 
 import jakarta.servlet.FilterChain;

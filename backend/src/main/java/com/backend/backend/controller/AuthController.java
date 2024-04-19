@@ -3,11 +3,11 @@ package com.backend.backend.controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
-import com.backend.backend.modals.auth.LoginRequestDTO;
-import com.backend.backend.modals.auth.LoginResponseDTO;
-import com.backend.backend.modals.auth.RefreshTokenRequestDTO;
-import com.backend.backend.modals.users.User;
-import com.backend.backend.modals.users.UserRepo;
+import com.backend.backend.models.auth.LoginRequestDTO;
+import com.backend.backend.models.auth.LoginResponseDTO;
+import com.backend.backend.models.auth.RefreshTokenRequestDTO;
+import com.backend.backend.models.users.User;
+import com.backend.backend.models.users.UserRepo;
 import com.backend.backend.services.TokenService;
 import com.backend.backend.utils.ReponseBuilder;
 

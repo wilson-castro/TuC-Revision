@@ -27,11 +27,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
-import com.backend.backend.modals.users.User;
-import com.backend.backend.modals.users.UserRecoverDTO;
-import com.backend.backend.modals.users.UserRepo;
-import com.backend.backend.modals.users.UserRequestDTO;
-import com.backend.backend.modals.users.UserResponseDTO;
+import com.backend.backend.models.users.User;
+import com.backend.backend.models.users.UserRecoverDTO;
+import com.backend.backend.models.users.UserRepo;
+import com.backend.backend.models.users.UserRequestDTO;
+import com.backend.backend.models.users.UserResponseDTO;
 import com.backend.backend.utils.ReplaceObjectAttributes;
 import com.backend.backend.utils.ReponseBuilder;
 

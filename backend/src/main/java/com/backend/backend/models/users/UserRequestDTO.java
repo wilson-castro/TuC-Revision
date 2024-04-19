@@ -1,4 +1,4 @@
-package com.backend.backend.modals.users;
+package com.backend.backend.models.users;
 
 import java.util.Date;
 

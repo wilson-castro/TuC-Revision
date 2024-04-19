@@ -7,8 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.backend.backend.modals.users.User;
-import com.backend.backend.modals.users.UserRepo;
+import com.backend.backend.models.users.User;
+import com.backend.backend.models.users.UserRepo;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Component

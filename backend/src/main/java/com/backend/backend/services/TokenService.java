@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.backend.backend.modals.users.User;
+import com.backend.backend.models.users.User;
 
 @Service
 public class TokenService {
@@ -59,7 +59,7 @@ public class TokenService {
 
     private String generateTokenInternal(User user, Instant exp, String secret) {
         return JWT.create()
-                .withClaim("carros", true)
+                .withClaim("teams", true)
                 .withClaim("users", user.getRole().toUpperCase().contains("ADMIN"))
                 .withSubject(user.getUsername())
                 .withClaim("id", user.getId())

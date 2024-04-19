@@ -1,4 +1,4 @@
-package com.backend.backend.modals.auth;
+package com.backend.backend.models.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
