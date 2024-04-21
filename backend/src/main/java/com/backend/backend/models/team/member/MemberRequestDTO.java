@@ -1,5 +1,6 @@
 package com.backend.backend.models.team.member;
 
+import com.backend.backend.models.DTOGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +21,6 @@ public class MemberRequestDTO {
     private Long userId;
 
     public Member toEntity() {
-        return new Member(id, null, null);
+        return DTOGenerator.from(this, new Member());
     }
 }

@@ -2,6 +2,7 @@ package com.backend.backend.models.team;
 
 import java.util.Date;
 
+import com.backend.backend.models.DTOGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.GeneratedValue;
@@ -29,10 +30,8 @@ public class TeamRequestDTO {
 
 
     public Team toEntity() {
-
         // Create and return Team object
-
-        return new Team(id, nome, ativo, dataCadastro);
+        return  DTOGenerator.from(this,new Team());
     }
 
 }

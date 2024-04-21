@@ -57,4 +57,18 @@ public class ReponseBuilder {
         success.put("path", params + (query != null ? "?" + query : ""));
         return new ResponseEntity<>(success, code);
     }
+
+    public ResponseEntity<Map<String, Object>> success(Object data, HttpStatus code) {
+        java.util.Map<String, Object> success = new HashMap<>();
+        UriComponents path = ServletUriComponentsBuilder.fromCurrentRequest().build();
+        String params = "/" + String.join("/", path.getPathSegments());
+        String query = path.getQuery();
+
+        success.put("status", code.getReasonPhrase());
+        success.put("data", data);
+        success.put("code", code.value());
+        success.put("timestamp", System.currentTimeMillis());
+        success.put("path", params + (query != null ? "?" + query : ""));
+        return new ResponseEntity<>(success, code);
+    }
 }

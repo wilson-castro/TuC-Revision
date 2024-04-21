@@ -2,6 +2,7 @@ package com.backend.backend.models.users;
 
 import java.util.Date;
 
+import com.backend.backend.models.DTOGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.backend.backend.annotations.EnumValidator;
 
@@ -44,7 +45,7 @@ public class UserRequestDTO {
     private Date dataCadastro = new Date();
 
     public User toEntity() {
-        return new User(id, login, senha, nome, ativo, dataNascimento, dataCadastro, role);
+        return DTOGenerator.from(this, new User());
     }
 
 }

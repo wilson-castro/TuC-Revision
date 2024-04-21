@@ -74,7 +74,7 @@ public class TeamController {
             @RequestParam(defaultValue = "10") int size) {
         PageRequest of = PageRequest.of(page, size);
 
-        Page<TeamResponseDTO> findAll = repository.findAll(of).map(user -> user.toDTO());
+        Page<TeamResponseDTO> findAll = repository.findAll(of).map(Team::toDTO);
         return findAll;
     }
 

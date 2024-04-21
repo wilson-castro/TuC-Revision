@@ -46,13 +46,12 @@ public class Team {
     }
 
     public TeamResponseDTO toDTO() {
-        return new TeamResponseDTO(this);
+        return TeamResponseDTO.from(this);
     }
 
     public boolean isEnabled() {
         if (this.ativo == null)
             return false;
-
         return true;
     }
 }
