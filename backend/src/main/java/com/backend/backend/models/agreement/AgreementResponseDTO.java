@@ -1,6 +1,5 @@
 package com.backend.backend.models.agreement;
 
-import java.lang.reflect.Field;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
