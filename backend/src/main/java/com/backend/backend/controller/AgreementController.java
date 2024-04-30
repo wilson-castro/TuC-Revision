@@ -189,8 +189,8 @@ class Importer {
             }
 
             long line = 1;
-            importer.setStatus(Status.RUNNING);
-            importer.setMessage("Processando arquivo...");
+            importer.setStatus(Status.IDDLE);
+            importer.setMessage("Aguardando...");
             importerRepo.save(importer);
             List<Future<Agreement>> promisses = new ArrayList<>();
             for (Agreement agreement : agreements) {
@@ -198,12 +198,15 @@ class Importer {
                 line++;
             }
 
-            // Wait for all agreements to be saved
+            importer.setStatus(Status.RUNNING);
+
             line = 1;
             for (Future<Agreement> future : promisses) {
                 future.get();
-                importer.setMessage("Concordancias importadas:" + line);
-                importerRepo.save(importer);
+                if (line % 1000 == 0) {
+                    importer.setMessage("Concordancias importadas:" + line);
+                    importerRepo.save(importer);
+                }
                 line++;
             }
             boolean delete = file.delete();

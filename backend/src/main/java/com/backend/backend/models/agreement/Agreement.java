@@ -2,6 +2,7 @@ package com.backend.backend.models.agreement;
 
 import java.util.Date;
 
+import com.backend.backend.models.team.Team;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,7 +25,6 @@ import lombok.ToString;
 @Entity(name = "concordancias")
 @EqualsAndHashCode(of = "id")
 
-
 public class Agreement {
 
     @Transient
@@ -33,14 +33,14 @@ public class Agreement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title",length = size)
+    @Column(name = "title", length = size)
     private String title;
 
     @Column(name = "abstract", length = size)
     @JsonProperty("abstract")
     private String abst;
 
-    @Column(name = "year",length = size)
+    @Column(name = "year", length = size)
     private Long year;
 
     @Column(name = "authors", length = size)
@@ -76,6 +76,10 @@ public class Agreement {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dataCadastro = new Date();
 
+    @ManyToOne
+    @JoinColumn(name = "teamId", unique = false, nullable = false, updatable = false)
+    private Team team;
+
     public Agreement(AgreementResponseDTO data) {
         this.title = data.getTitle();
         this.abst = data.getAbst();
@@ -110,6 +114,8 @@ public class Agreement {
         this.publisher = agreementRequestDTO.getPublisher();
         this.language = agreementRequestDTO.getLanguage();
         this.note = agreementRequestDTO.getNote();
+        this.dataCadastro = new Date();
+        this.team = null;
     }
 
 }
